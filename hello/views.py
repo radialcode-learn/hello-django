@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.timezone import datetime
 
+print("http://127.0.0.1:5000/hello/VSCode")
+
 # Create your views here.
 def home(request):
     return render(request, "hello/home.html")
@@ -20,3 +22,5 @@ def about(request):
 
 def contact(request):
     return render(request, "hello/contact.html")
+
+

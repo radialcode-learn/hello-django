@@ -1,2 +1,3 @@
 static_collected
 .venv
+**/__pycache__
