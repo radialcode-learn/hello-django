@@ -27,7 +27,7 @@ def home_list_view(request):
         logs = LogMessage.objects.all()
         serializer = LogMessageSerializer(logs, many=True)
         return Response(
-            {"status": True, "data": serializer.data, "message": "Success."}
+            {"success": True, "data": serializer.data, "message": "Success."}
         )
 
     if request.method == "POST":
@@ -38,7 +38,7 @@ def home_list_view(request):
             serializer.save()
             return Response(
                 {
-                    "status": True,
+                    "success": True,
                     "data": serializer.data,
                     "message": "Log create successfully.",
                 },
