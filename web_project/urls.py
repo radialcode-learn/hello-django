@@ -16,9 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.http import HttpResponse
+
+
+def index(request):
+    return HttpResponse("Sample Web Project 🎆🎇!")
+
 
 urlpatterns = [
-    path("", include("hello.urls")),
+    path("", index),
+    path("hello/", include("hello.urls")),
     path("admin/", admin.site.urls),
 ]
 
