@@ -16,11 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.http import HttpResponse
+from django.http import JsonResponse
 
 
 def index(request):
-    return HttpResponse("Sample Web Project 🎆🎇!")
+    return JsonResponse({"message": "Sample Web Project 🎆🎇!"})
 
 
 urlpatterns = [

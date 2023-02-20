@@ -1,11 +1,13 @@
 import re
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.utils.timezone import datetime
-from hello.forms import LogMessageForm
 from hello.models import LogMessage
-from django.shortcuts import redirect
-from django.views.generic import ListView
+
+# Rest Framework
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializers import LogMessageSerializer
+from rest_framework import status
 
 print("http://127.0.0.1:5000/hello/VSCode")
 
@@ -16,38 +18,29 @@ print("http://127.0.0.1:5000/hello/VSCode")
 #     return render(request, "hello/home.html")
 
 
-class HomeListView(ListView):
-    """Renders the home page, with a list of all messages."""
-
-    model = LogMessage
-
-    def get_context_data(self, **kwargs):
-        context = super(HomeListView, self).get_context_data(**kwargs)
-        return context
-
-
-def hello_there(request, name):
-    return render(
-        request, "hello/hello_there.html", {"name": name, "date": datetime.now()}
-    )
-
-
-def about(request):
-    return render(request, "hello/about.html")
-
-
-def contact(request):
-    return render(request, "hello/contact.html")
-
-
-def log_message(request):
-    form = LogMessageForm(request.POST or None)
+@api_view(["GET", "POST"])
+def home_list_view(request):
+    """
+    Get All available logs
+    """
+    if request.method == "GET":
+        logs = LogMessage.objects.all()
+        serializer = LogMessageSerializer(logs, many=True)
+        return Response(
+            {"status": True, "data": serializer.data, "message": "Success."}
+        )
 
     if request.method == "POST":
-        if form.is_valid():
-            message = form.save(commit=False)
-            message.log_date = datetime.now()
-            message.save()
-            return redirect("home")
-    else:
-        return render(request, "hello/log_message.html", {"form": form})
+        data = request.data
+        data["log_date"] = datetime.now()
+        serializer = LogMessageSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "status": True,
+                    "data": serializer.data,
+                    "message": "Log create successfully.",
+                },
+                status=status.HTTP_201_CREATED,
+            )
